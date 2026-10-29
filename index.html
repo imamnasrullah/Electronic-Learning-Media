@@ -1,76 +1,881 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#101827">
-  <title>Electronic Maze</title>
-  <link rel="stylesheet" href="./style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Electronic Learning Media</title>
+
+<style>
+:root {
+    --bg: #101827;
+    --panel: #1c2940;
+    --panel2: #243650;
+    --text: #f1f5ff;
+    --muted: #a8bfdc;
+    --green: #59e6b5;
+    --yellow: #ffc857;
+    --red: #ff707b;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 6%;
+    background: #151f31;
+    border-bottom: 1px solid #344765;
+    flex-wrap: wrap;
+}
+
+.brand {
+    font-weight: bold;
+    font-size: 20px;
+    color: var(--green);
+    cursor: pointer;
+}
+
+nav {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+button {
+    border: 0;
+    border-radius: 9px;
+    padding: 11px 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: .2s;
+}
+
+button:hover { filter: brightness(1.12); }
+
+.nav-btn, .secondary {
+    background: var(--panel2);
+    color: var(--text);
+}
+
+.primary {
+    background: var(--green);
+    color: #10251f;
+}
+
+main {
+    width: 92%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+
+.page { display: none; }
+.page.active { display: block; }
+
+.hero {
+    text-align: center;
+    padding: 40px 15px;
+}
+
+.hero .icon {
+    font-size: 65px;
+}
+
+h1 { font-size: clamp(28px, 5vw, 42px); }
+h2 { margin-top: 0; }
+
+p {
+    line-height: 1.7;
+    color: var(--muted);
+}
+
+.accent { color: var(--green); }
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 28px;
+}
+
+.card {
+    background: var(--panel);
+    border: 1px solid #344765;
+    border-radius: 16px;
+    padding: 24px;
+    transition: .2s;
+}
+
+.card:hover {
+    border-color: var(--green);
+    transform: translateY(-3px);
+}
+
+.card-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+}
+
+.card p { min-height: 55px; }
+
+.tag {
+    display: inline-block;
+    color: var(--green);
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.content-panel {
+    background: var(--panel);
+    border: 1px solid #344765;
+    padding: 25px;
+    border-radius: 15px;
+    margin-top: 20px;
+}
+
+.component-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.component {
+    padding: 18px;
+    background: var(--panel2);
+    border-radius: 12px;
+}
+
+.component h3 { color: var(--green); }
+
+.flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin: 25px 0;
+}
+
+.flow-box {
+    width: min(100%, 440px);
+    padding: 14px;
+    text-align: center;
+    background: var(--panel2);
+    border: 1px solid #58708f;
+    border-radius: 10px;
+}
+
+.flow-box.start {
+    border-radius: 40px;
+    border-color: var(--green);
+}
+
+.flow-box.decision {
+    border-color: var(--yellow);
+    background: #493d24;
+}
+
+.arrow {
+    color: var(--green);
+    font-size: 24px;
+}
+
+.flow-branches {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    width: min(100%, 620px);
+}
+
+.branch {
+    text-align: center;
+    background: #243650;
+    border: 1px solid #405778;
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.back-row {
+    margin-bottom: 20px;
+}
+
+#maze {
+    display: grid;
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+    gap: 3px;
+    width: min(100%, 450px);
+    margin: 20px auto;
+}
+
+.cell {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    font-size: clamp(11px, 2.7vw, 22px);
+    background: #192b40;
+}
+
+.wall { background: #344765; }
+.door { background: #594318; }
+.player { background: #116e6f; }
+.enemy { background: #54284d; }
+.exit { background: #145b48; }
+
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.controls {
+    display: grid;
+    grid-template-columns: repeat(3, 58px);
+    justify-content: center;
+    gap: 7px;
+}
+
+.controls button {
+    font-size: 20px;
+    background: var(--panel2);
+    color: white;
+}
+
+.controls .empty { visibility: hidden; }
+
+#quiz {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    background: #000b;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.quiz-card {
+    width: min(100%, 480px);
+    background: var(--panel);
+    border: 1px solid #58708f;
+    border-radius: 16px;
+    padding: 24px;
+}
+
+#answers {
+    display: grid;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.answer {
+    background: var(--panel2);
+    color: white;
+    text-align: left;
+}
+
+footer {
+    text-align: center;
+    padding: 25px;
+    border-top: 1px solid #344765;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+@media (max-width: 650px) {
+    header { padding: 16px 4%; }
+    main { width: 92%; margin: 20px auto; }
+    .cards, .component-grid, .flow-branches {
+        grid-template-columns: 1fr;
+    }
+    .card p { min-height: 0; }
+}
+</style>
 </head>
+
 <body>
-  <main class="app">
-    <header class="topbar">
-      <div>
-        <p class="eyebrow">MEDIA PEMBELAJARAN • DRILL AND PRACTICE</p>
-        <h1>⚡ Electronic Maze</h1>
-      </div>
-      <div class="scorebox"><span>SKOR</span><strong id="score">0</strong></div>
-    </header>
 
-    <section id="home" class="panel home-panel">
-      <div class="hero-icon">🧩</div>
-      <h2>Jelajahi Labirin Elektronika!</h2>
-      <p>Temukan empat pintu komponen. Jawab pertanyaan dengan benar untuk membuka jalan keluar.</p>
-      <div class="component-chips">
-        <span>〰️ Resistor</span><span>🔋 Kapasitor</span><span>🧲 Induktor</span><span>➡️ Dioda</span>
-      </div>
-      <button id="startBtn" class="primary">Mulai Bermain</button>
-      <p class="small">Kontrol: tombol arah di layar atau tombol panah/WASD.</p>
-    </section>
+<header>
+    <div class="brand" onclick="showPage('home')">
+        ⚡ Electronic Learning
+    </div>
 
-    <section id="game" class="game-layout hidden">
-      <div class="status-row">
-        <span id="progress">Pintu terbuka: 0/4</span>
-        <span id="status">Cari pintu pertama!</span>
-      </div>
-      <div id="maze" class="maze" aria-label="Labirin"></div>
-      <div class="game-bottom">
-        <div class="legend">
-          <span>🟩 Kamu</span><span>🚪 Soal</span><span>🏁 Keluar</span>
+    <nav>
+        <button class="nav-btn" onclick="showPage('home')">Beranda</button>
+        <button class="nav-btn" onclick="showPage('gamePage')">Game</button>
+        <button class="nav-btn" onclick="showPage('arPage')">AR</button>
+        <button class="nav-btn" onclick="showPage('materiPage')">Materi</button>
+        <button class="nav-btn" onclick="showPage('flowPage')">Flowchart</button>
+    </nav>
+</header>
+
+<main>
+
+    <!-- BERANDA -->
+    <section id="home" class="page active">
+        <div class="hero">
+            <div class="icon">⚡</div>
+            <h1>Electronic <span class="accent">Learning Media</span></h1>
+            <p>
+                Media pembelajaran interaktif untuk mengenal
+                komponen elektronika dasar melalui materi,
+                Augmented Reality, dan permainan edukatif.
+            </p>
+            <button class="primary" onclick="showPage('materiPage')">
+                Mulai Belajar →
+            </button>
         </div>
-        <div class="controls" aria-label="Kontrol gerak">
-          <button class="move empty" tabindex="-1" aria-hidden="true"></button>
-          <button class="move" data-dir="up" aria-label="Atas">▲</button>
-          <button class="move empty" tabindex="-1" aria-hidden="true"></button>
-          <button class="move" data-dir="left" aria-label="Kiri">◀</button>
-          <button class="move" data-dir="down" aria-label="Bawah">▼</button>
-          <button class="move" data-dir="right" aria-label="Kanan">▶</button>
+
+        <h2>Menu Pembelajaran</h2>
+
+        <div class="cards">
+            <article class="card">
+                <div class="card-icon">🎮</div>
+                <span class="tag">BELAJAR SAMBIL BERMAIN</span>
+                <h2>Electronic Maze</h2>
+                <p>
+                    Jelajahi labirin, jawab soal elektronika,
+                    kumpulkan poin, dan capai garis finish.
+                </p>
+                <button class="primary" onclick="showPage('gamePage')">
+                    Buka Game
+                </button>
+            </article>
+
+            <article class="card">
+                <div class="card-icon">📱</div>
+                <span class="tag">VISUALISASI INTERAKTIF</span>
+                <h2>Augmented Reality</h2>
+                <p>
+                    Menu pengenalan komponen elektronika
+                    menggunakan media AR.
+                </p>
+                <button class="primary" onclick="showPage('arPage')">
+                    Buka AR
+                </button>
+            </article>
+
+            <article class="card">
+                <div class="card-icon">📚</div>
+                <span class="tag">MATERI ELEKTRONIKA</span>
+                <h2>Materi Pembelajaran</h2>
+                <p>
+                    Pelajari pengertian, fungsi, simbol,
+                    dan penerapan komponen elektronika.
+                </p>
+                <button class="primary" onclick="showPage('materiPage')">
+                    Baca Materi
+                </button>
+            </article>
+
+            <article class="card">
+                <div class="card-icon">🔀</div>
+                <span class="tag">ALUR PEMBELAJARAN</span>
+                <h2>Flowchart Drill and Practice</h2>
+                <p>
+                    Lihat proses pembelajaran berbasis komputer,
+                    dari penyajian materi sampai evaluasi.
+                </p>
+                <button class="primary" onclick="showPage('flowPage')">
+                    Lihat Flowchart
+                </button>
+            </article>
         </div>
-      </div>
     </section>
 
-    <section id="quizModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="quizTitle">
-      <div class="modal-card">
-        <div class="modal-top"><span id="quizCategory" class="category">KOMPONEN</span><span id="questionNumber">SOAL 1/4</span></div>
-        <h2 id="quizTitle">Pertanyaan</h2>
-        <p id="quizPrompt"></p>
-        <div id="answers" class="answers"></div>
-        <p id="feedback" class="feedback" aria-live="polite"></p>
-        <button id="continueBtn" class="primary hidden">Lanjutkan</button>
-      </div>
+
+    <!-- GAME -->
+    <section id="gamePage" class="page">
+        <div class="back-row">
+            <button class="secondary" onclick="showPage('home')">
+                ← Kembali ke Beranda
+            </button>
+        </div>
+
+        <div class="content-panel">
+            <h1>🎮 Electronic Maze</h1>
+            <p>
+                Jawab pertanyaan pada pintu labirin untuk mendapatkan
+                poin. Selesaikan semua pertanyaan sebelum menuju finish.
+            </p>
+
+            <div class="game-info">
+                <strong>Skor: <span id="score">0</span></strong>
+                <strong id="progress">Soal: 0/4</strong>
+            </div>
+
+            <p id="gameStatus" role="status">
+                Tekan tombol mulai untuk bermain.
+            </p>
+
+            <div id="maze"></div>
+
+            <div class="controls">
+                <button class="empty"> </button>
+                <button onclick="movePlayer(-1,0)">▲</button>
+                <button class="empty"> </button>
+                <button onclick="movePlayer(0,-1)">◀</button>
+                <button onclick="movePlayer(1,0)">▼</button>
+                <button onclick="movePlayer(0,1)">▶</button>
+            </div>
+
+            <div style="text-align:center;margin-top:20px">
+                <button class="primary" onclick="startGame()">Mulai / Ulangi Game</button>
+            </div>
+        </div>
     </section>
 
-    <section id="win" class="panel win-panel hidden">
-      <div class="hero-icon">🏆</div>
-      <h2>Hebat, kamu berhasil!</h2>
-      <p>Kamu telah melewati semua pintu dan menyelesaikan latihan komponen elektronika.</p>
-      <div class="final-score"><span>Skor akhir</span><strong id="finalScore">0</strong><span>/ 40 poin</span></div>
-      <p id="resultText"></p>
-      <button id="restartBtn" class="primary">Main Lagi</button>
+
+    <!-- AR -->
+    <section id="arPage" class="page">
+        <button class="secondary" onclick="showPage('home')">
+            ← Kembali ke Beranda
+        </button>
+
+        <div class="content-panel">
+            <h1>📱 Augmented Reality</h1>
+            <p>
+                Menu ini dirancang untuk membantu mahasiswa mengenali
+                bentuk fisik komponen elektronika secara visual.
+            </p>
+
+            <div class="component-grid">
+                <div class="component">
+                    <h3>🔴 Resistor</h3>
+                    <p>Komponen untuk membatasi arus listrik.</p>
+                </div>
+                <div class="component">
+                    <h3>🔵 Kapasitor</h3>
+                    <p>Komponen yang menyimpan muatan listrik.</p>
+                </div>
+                <div class="component">
+                    <h3>🟣 Induktor</h3>
+                    <p>Komponen yang menyimpan energi dalam medan magnet.</p>
+                </div>
+                <div class="component">
+                    <h3>🟢 Dioda</h3>
+                    <p>Komponen semikonduktor yang mengalirkan arus terutama ke satu arah.</p>
+                </div>
+            </div>
+
+            <h2 style="margin-top:28px">Cara Menggunakan AR</h2>
+            <ol>
+                <li>Buka aplikasi AR yang digunakan dalam proyek.</li>
+                <li>Arahkan kamera ke marker atau gambar pemicu.</li>
+                <li>Amati model komponen yang muncul.</li>
+                <li>Pelajari nama, bentuk, dan fungsi komponennya.</li>
+            </ol>
+
+            <p>
+                <strong>Catatan:</strong> bagian ini masih berupa halaman
+                pengenalan AR. Untuk menampilkan model 3D melalui kamera,
+                diperlukan marker, aset 3D, dan integrasi aplikasi AR.
+            </p>
+        </div>
     </section>
 
-    <footer>Electronic Maze • Resistor • Kapasitor • Induktor • Dioda</footer>
-  </main>
-  <script type="module" src="./main.js"></script>
+
+    <!-- MATERI -->
+    <section id="materiPage" class="page">
+        <button class="secondary" onclick="showPage('home')">
+            ← Kembali ke Beranda
+        </button>
+
+        <div class="content-panel">
+            <h1>📚 Materi Komponen Elektronika</h1>
+            <p>
+                Pelajari komponen berikut sebelum mengerjakan
+                latihan dalam game Electronic Maze.
+            </p>
+
+            <div class="component-grid">
+                <article class="component">
+                    <h3>1. Resistor</h3>
+                    <p>
+                        Resistor adalah komponen pasif yang digunakan
+                        untuk membatasi arus listrik dan membagi tegangan.
+                    </p>
+                    <p><strong>Satuan:</strong> Ohm (Ω)</p>
+                    <p><strong>Contoh penggunaan:</strong> pembatas arus LED.</p>
+                </article>
+
+                <article class="component">
+                    <h3>2. Kapasitor</h3>
+                    <p>
+                        Kapasitor menyimpan muatan dan energi listrik
+                        dalam medan listrik.
+                    </p>
+                    <p><strong>Satuan:</strong> Farad (F)</p>
+                    <p><strong>Contoh penggunaan:</strong> penyaring tegangan.</p>
+                </article>
+
+                <article class="component">
+                    <h3>3. Induktor</h3>
+                    <p>
+                        Induktor menyimpan energi dalam medan magnet
+                        ketika dialiri arus listrik.
+                    </p>
+                    <p><strong>Satuan:</strong> Henry (H)</p>
+                    <p><strong>Contoh penggunaan:</strong> rangkaian filter.</p>
+                </article>
+
+                <article class="component">
+                    <h3>4. Dioda</h3>
+                    <p>
+                        Dioda adalah komponen semikonduktor yang
+                        memungkinkan arus mengalir terutama ke satu arah.
+                    </p>
+                    <p><strong>Terminal:</strong> Anoda dan katoda.</p>
+                    <p><strong>Contoh penggunaan:</strong> penyearah.</p>
+                </article>
+            </div>
+
+            <div style="text-align:center;margin-top:24px">
+                <button class="primary" onclick="showPage('gamePage')">
+                    Latihan melalui Game →
+                </button>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- FLOWCHART -->
+    <section id="flowPage" class="page">
+        <button class="secondary" onclick="showPage('home')">
+            ← Kembali ke Beranda
+        </button>
+
+        <div class="content-panel">
+            <h1>🔀 Flowchart Drill and Practice</h1>
+            <p>
+                Model Drill and Practice menekankan latihan berulang
+                agar peserta didik semakin memahami materi melalui
+                jawaban, pemeriksaan, dan umpan balik.
+            </p>
+
+            <div class="flow">
+                <div class="flow-box start">
+                    MULAI
+                </div>
+
+                <div class="arrow">↓</div>
+
+                <div class="flow-box">
+                    Tampilkan tujuan pembelajaran
+                </div>
+
+                <div class="arrow">↓</div>
+
+                <div class="flow-box">
+                    Sajikan materi komponen elektronika
+                </div>
+
+                <div class="arrow">↓</div>
+
+                <div class="flow-box">
+                    Berikan latihan atau pertanyaan
+                </div>
+
+                <div class="arrow">↓</div>
+
+                <div class="flow-box decision">
+                    Apakah jawaban benar?
+                </div>
+
+                <div class="flow-branches">
+                    <div class="branch">
+                        <strong style="color:var(--green)">YA</strong>
+                        <div class="arrow">↓</div>
+                        Berikan penguatan dan skor
+                    </div>
+                    <div class="branch">
+                        <strong style="color:var(--red)">TIDAK</strong>
+                        <div class="arrow">↓</div>
+                        Tampilkan umpan balik dan kesempatan mencoba lagi
+                    </div>
+                </div>
+
+                <div class="arrow">↓</div>
+
+                <div class="flow-box decision">
+                    Apakah latihan sudah selesai?
+                </div>
+
+                <div class="flow-branches">
+                    <div class="branch">
+                        <strong style="color:var(--red)">BELUM</strong>
+                        <div class="arrow">↺</div>
+                        Lanjutkan latihan berikutnya
+                    </div>
+                    <div class="branch">
+                        <strong style="color:var(--green)">SUDAH</strong>
+                        <div class="arrow">↓</div>
+                        Tampilkan hasil evaluasi
+                    </div>
+                </div>
+
+                <div class="arrow">↓</div>
+
+                <div class="flow-box start">
+                    SELESAI
+                </div>
+            </div>
+
+            <p>
+                <strong>Inti model:</strong> peserta didik berlatih,
+                menerima umpan balik, memperbaiki kesalahan, dan
+                mengulang latihan sampai mencapai tujuan pembelajaran.
+            </p>
+        </div>
+    </section>
+
+</main>
+
+<!-- MODAL SOAL GAME -->
+<div id="quiz" role="dialog" aria-modal="true">
+    <div class="quiz-card">
+        <h2 id="questionTitle">Pertanyaan</h2>
+        <p id="questionText"></p>
+        <div id="answers"></div>
+    </div>
+</div>
+
+<footer>
+    Electronic Learning Media · Elektronika Dasar
+</footer>
+
+<script>
+// =====================================
+// NAVIGASI ANTAR MENU
+// =====================================
+
+function showPage(pageId) {
+    document.querySelectorAll(".page").forEach(page => {
+        page.classList.remove("active");
+    });
+
+    document.getElementById(pageId).classList.add("active");
+}
+
+// =====================================
+// DATA GAME ELECTRONIC MAZE
+// =====================================
+
+const mapTemplate = [
+    "#########",
+    "#S..#..R#",
+    "#.#.#.#.#",
+    "#.#...#.#",
+    "#...C...#",
+    "###.#.#.#",
+    "#L..#D.E#",
+    "#.......#",
+    "#########"
+];
+
+const questions = [
+    {
+        door: "R",
+        title: "Resistor",
+        text: "Apa fungsi utama resistor?",
+        options: [
+            "Membatasi arus listrik",
+            "Menyimpan muatan listrik",
+            "Mengukur suhu"
+        ],
+        answer: 0
+    },
+    {
+        door: "C",
+        title: "Kapasitor",
+        text: "Apa satuan kapasitansi?",
+        options: ["Ohm", "Farad", "Henry"],
+        answer: 1
+    },
+    {
+        door: "L",
+        title: "Induktor",
+        text: "Induktor menyimpan energi dalam bentuk apa?",
+        options: ["Cahaya", "Medan magnet", "Suara"],
+        answer: 1
+    },
+    {
+        door: "D",
+        title: "Dioda",
+        text: "Dioda mengalirkan arus terutama ke arah ...",
+        options: ["Dua arah sama bebas", "Satu arah", "Tidak ada arah"],
+        answer: 1
+    }
+];
+
+const maze = document.getElementById("maze");
+const gameStatus = document.getElementById("gameStatus");
+const quiz = document.getElementById("quiz");
+const answersElement = document.getElementById("answers");
+
+let map = [];
+let player = { row: 1, col: 1 };
+let score = 0;
+let answered = new Set();
+let activeQuestion = null;
+let gameRunning = false;
+
+function startGame() {
+    map = mapTemplate.map(row => row.split(""));
+    player = { row: 1, col: 1 };
+    score = 0;
+    answered = new Set();
+    activeQuestion = null;
+    gameRunning = true;
+
+    quiz.style.display = "none";
+
+    document.getElementById("score").textContent = score;
+    gameStatus.textContent = "Selesaikan semua soal dan capai finish!";
+
+    updateProgress();
+    renderMaze();
+}
+
+function renderMaze() {
+    maze.innerHTML = "";
+
+    for (let r = 0; r < map.length; r++) {
+        for (let c = 0; c < map[r].length; c++) {
+            const tile = map[r][c];
+            const cell = document.createElement("div");
+            cell.className = "cell";
+
+            if (tile === "#") {
+                cell.classList.add("wall");
+                cell.textContent = "🧱";
+            } else if (tile === "E") {
+                cell.classList.add("exit");
+                cell.textContent = "🏁";
+            } else if (questions.some(q => q.door === tile)) {
+                cell.classList.add("door");
+                cell.textContent = answered.has(tile) ? "✅" : "❓";
+            }
+
+            if (player.row === r && player.col === c) {
+                cell.textContent = "🧑‍🎓";
+                cell.classList.add("player");
+            }
+
+            maze.appendChild(cell);
+        }
+    }
+}
+
+function updateProgress() {
+    document.getElementById("score").textContent = score;
+    document.getElementById("progress").textContent =
+        `Soal: ${answered.size}/${questions.length}`;
+}
+
+function movePlayer(dr, dc) {
+    if (!gameRunning || activeQuestion !== null) return;
+
+    const nr = player.row + dr;
+    const nc = player.col + dc;
+
+    if (
+        nr < 0 || nr >= map.length ||
+        nc < 0 || nc >= map[nr].length ||
+        map[nr][nc] === "#"
+    ) {
+        return;
+    }
+
+    player = { row: nr, col: nc };
+    const tile = map[nr][nc];
+
+    renderMaze();
+
+    if (questions.some(q => q.door === tile) && !answered.has(tile)) {
+        openQuestion(tile);
+        return;
+    }
+
+    checkFinish();
+}
+
+function openQuestion(tile) {
+    const index = questions.findIndex(q => q.door === tile);
+    if (index < 0) return;
+
+    activeQuestion = index;
+    const q = questions[index];
+
+    document.getElementById("questionTitle").textContent = q.title;
+    document.getElementById("questionText").textContent = q.text;
+    answersElement.innerHTML = "";
+
+    q.options.forEach((option, i) => {
+        const button = document.createElement("button");
+        button.className = "answer";
+        button.textContent = option;
+
+        button.onclick = () => {
+            if (i === q.answer) {
+                score += 10;
+                answered.add(q.door);
+                gameStatus.textContent = "Benar! +10 poin.";
+            } else {
+                gameStatus.textContent =
+                    "Belum tepat. Coba pelajari materi lagi.";
+            }
+
+            activeQuestion = null;
+            quiz.style.display = "none";
+            updateProgress();
+            renderMaze();
+            checkFinish();
+        };
+
+        answersElement.appendChild(button);
+    });
+
+    quiz.style.display = "flex";
+}
+
+function checkFinish() {
+    const tile = map[player.row][player.col];
+
+    if (tile !== "E") return;
+
+    if (answered.size === questions.length) {
+        gameRunning = false;
+        gameStatus.textContent =
+            `🏆 Selamat! Kamu menang dengan skor ${score}.`;
+    } else {
+        gameStatus.textContent =
+            `Selesaikan semua ${questions.length} soal terlebih dahulu.`;
+    }
+}
+
+document.addEventListener("keydown", event => {
+    if (!gameRunning || activeQuestion !== null) return;
+
+    const key = event.key.toLowerCase();
+
+    if (key.startsWith("arrow")) event.preventDefault();
+
+    if (key === "arrowup" || key === "w") movePlayer(-1, 0);
+    if (key === "arrowdown" || key === "s") movePlayer(1, 0);
+    if (key === "arrowleft" || key === "a") movePlayer(0, -1);
+    if (key === "arrowright" || key === "d") movePlayer(0, 1);
+});
+</script>
+
 </body>
 </html>
