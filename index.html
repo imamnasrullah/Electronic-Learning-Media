@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#101827">
+  <title>Electronic Maze</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">MEDIA PEMBELAJARAN • DRILL AND PRACTICE</p>
+        <h1>⚡ Electronic Maze</h1>
+      </div>
+      <div class="scorebox"><span>SKOR</span><strong id="score">0</strong></div>
+    </header>
+
+    <section id="home" class="panel home-panel">
+      <div class="hero-icon">🧩</div>
+      <h2>Jelajahi Labirin Elektronika!</h2>
+      <p>Temukan empat pintu komponen. Jawab pertanyaan dengan benar untuk membuka jalan keluar.</p>
+      <div class="component-chips">
+        <span>〰️ Resistor</span><span>🔋 Kapasitor</span><span>🧲 Induktor</span><span>➡️ Dioda</span>
+      </div>
+      <button id="startBtn" class="primary">Mulai Bermain</button>
+      <p class="small">Kontrol: tombol arah di layar atau tombol panah/WASD.</p>
+    </section>
+
+    <section id="game" class="game-layout hidden">
+      <div class="status-row">
+        <span id="progress">Pintu terbuka: 0/4</span>
+        <span id="status">Cari pintu pertama!</span>
+      </div>
+      <div id="maze" class="maze" aria-label="Labirin"></div>
+      <div class="game-bottom">
+        <div class="legend">
+          <span>🟩 Kamu</span><span>🚪 Soal</span><span>🏁 Keluar</span>
+        </div>
+        <div class="controls" aria-label="Kontrol gerak">
+          <button class="move empty" tabindex="-1" aria-hidden="true"></button>
+          <button class="move" data-dir="up" aria-label="Atas">▲</button>
+          <button class="move empty" tabindex="-1" aria-hidden="true"></button>
+          <button class="move" data-dir="left" aria-label="Kiri">◀</button>
+          <button class="move" data-dir="down" aria-label="Bawah">▼</button>
+          <button class="move" data-dir="right" aria-label="Kanan">▶</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="quizModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="quizTitle">
+      <div class="modal-card">
+        <div class="modal-top"><span id="quizCategory" class="category">KOMPONEN</span><span id="questionNumber">SOAL 1/4</span></div>
+        <h2 id="quizTitle">Pertanyaan</h2>
+        <p id="quizPrompt"></p>
+        <div id="answers" class="answers"></div>
+        <p id="feedback" class="feedback" aria-live="polite"></p>
+        <button id="continueBtn" class="primary hidden">Lanjutkan</button>
+      </div>
+    </section>
+
+    <section id="win" class="panel win-panel hidden">
+      <div class="hero-icon">🏆</div>
+      <h2>Hebat, kamu berhasil!</h2>
+      <p>Kamu telah melewati semua pintu dan menyelesaikan latihan komponen elektronika.</p>
+      <div class="final-score"><span>Skor akhir</span><strong id="finalScore">0</strong><span>/ 40 poin</span></div>
+      <p id="resultText"></p>
+      <button id="restartBtn" class="primary">Main Lagi</button>
+    </section>
+
+    <footer>Electronic Maze • Resistor • Kapasitor • Induktor • Dioda</footer>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
