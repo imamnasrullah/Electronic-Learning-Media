@@ -5,299 +5,408 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Electronic Learning Media</title>
 
+<script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+<script src="https://raw.githack.com/AR-js-org/AR.js/3.4.7/aframe/build/aframe-ar.js"></script>
+
 <style>
 :root {
-    --bg: #101827;
-    --panel: #1c2940;
-    --panel2: #243650;
-    --text: #f1f5ff;
-    --muted: #a8bfdc;
-    --green: #59e6b5;
-    --yellow: #ffc857;
-    --red: #ff707b;
+    --bg:#101827;
+    --panel:#1c2940;
+    --panel2:#243650;
+    --text:#f1f5ff;
+    --muted:#a8bfdc;
+    --green:#59e6b5;
+    --yellow:#ffc857;
+    --red:#ff707b;
 }
 
-* { box-sizing: border-box; }
+* { box-sizing:border-box; }
 
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: var(--bg);
-    color: var(--text);
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
 }
 
 header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    padding: 18px 6%;
-    background: #151f31;
-    border-bottom: 1px solid #344765;
-    flex-wrap: wrap;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    padding:18px 6%;
+    background:#151f31;
+    border-bottom:1px solid #344765;
+    flex-wrap:wrap;
 }
 
 .brand {
-    font-weight: bold;
-    font-size: 20px;
-    color: var(--green);
-    cursor: pointer;
+    font-weight:bold;
+    font-size:20px;
+    color:var(--green);
+    cursor:pointer;
 }
 
 nav {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
 }
 
 button {
-    border: 0;
-    border-radius: 9px;
-    padding: 11px 15px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: .2s;
+    border:0;
+    border-radius:9px;
+    padding:11px 15px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.2s;
 }
 
-button:hover { filter: brightness(1.12); }
+button:hover { filter:brightness(1.12); }
+button:disabled { cursor:not-allowed; opacity:.65; }
 
-.nav-btn, .secondary {
-    background: var(--panel2);
-    color: var(--text);
+.nav-btn,.secondary {
+    background:var(--panel2);
+    color:var(--text);
 }
 
 .primary {
-    background: var(--green);
-    color: #10251f;
+    background:var(--green);
+    color:#10251f;
 }
 
 main {
-    width: 92%;
-    max-width: 1050px;
-    margin: 35px auto;
+    width:92%;
+    max-width:1050px;
+    margin:35px auto;
 }
 
-.page { display: none; }
-.page.active { display: block; }
+.page { display:none; }
+.page.active { display:block; }
 
 .hero {
-    text-align: center;
-    padding: 40px 15px;
+    text-align:center;
+    padding:40px 15px;
 }
 
-.hero .icon {
-    font-size: 65px;
-}
-
-h1 { font-size: clamp(28px, 5vw, 42px); }
-h2 { margin-top: 0; }
+.hero .icon { font-size:65px; }
+h1 { font-size:clamp(28px,5vw,42px); }
+h2 { margin-top:0; }
 
 p {
-    line-height: 1.7;
-    color: var(--muted);
+    line-height:1.7;
+    color:var(--muted);
 }
 
-.accent { color: var(--green); }
+.accent { color:var(--green); }
 
 .cards {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px;
-    margin-top: 28px;
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:18px;
+    margin-top:28px;
 }
 
 .card {
-    background: var(--panel);
-    border: 1px solid #344765;
-    border-radius: 16px;
-    padding: 24px;
-    transition: .2s;
+    background:var(--panel);
+    border:1px solid #344765;
+    border-radius:16px;
+    padding:24px;
+    transition:.2s;
 }
 
 .card:hover {
-    border-color: var(--green);
-    transform: translateY(-3px);
+    border-color:var(--green);
+    transform:translateY(-3px);
 }
 
 .card-icon {
-    font-size: 40px;
-    margin-bottom: 12px;
+    font-size:40px;
+    margin-bottom:12px;
 }
 
-.card p { min-height: 55px; }
+.card p { min-height:55px; }
 
 .tag {
-    display: inline-block;
-    color: var(--green);
-    font-size: 12px;
-    margin-bottom: 10px;
+    display:inline-block;
+    color:var(--green);
+    font-size:12px;
+    margin-bottom:10px;
 }
 
 .content-panel {
-    background: var(--panel);
-    border: 1px solid #344765;
-    padding: 25px;
-    border-radius: 15px;
-    margin-top: 20px;
+    background:var(--panel);
+    border:1px solid #344765;
+    padding:25px;
+    border-radius:15px;
+    margin-top:20px;
 }
 
 .component-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:14px;
 }
 
 .component {
-    padding: 18px;
-    background: var(--panel2);
-    border-radius: 12px;
+    padding:18px;
+    background:var(--panel2);
+    border-radius:12px;
 }
 
-.component h3 { color: var(--green); }
+.component h3 { color:var(--green); }
 
 .flow {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    margin: 25px 0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    margin:25px 0;
 }
 
 .flow-box {
-    width: min(100%, 440px);
-    padding: 14px;
-    text-align: center;
-    background: var(--panel2);
-    border: 1px solid #58708f;
-    border-radius: 10px;
+    width:min(100%,440px);
+    padding:14px;
+    text-align:center;
+    background:var(--panel2);
+    border:1px solid #58708f;
+    border-radius:10px;
 }
 
 .flow-box.start {
-    border-radius: 40px;
-    border-color: var(--green);
+    border-radius:40px;
+    border-color:var(--green);
 }
 
 .flow-box.decision {
-    border-color: var(--yellow);
-    background: #493d24;
+    border-color:var(--yellow);
+    background:#493d24;
 }
 
 .arrow {
-    color: var(--green);
-    font-size: 24px;
+    color:var(--green);
+    font-size:24px;
 }
 
 .flow-branches {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    width: min(100%, 620px);
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    width:min(100%,620px);
 }
 
 .branch {
-    text-align: center;
-    background: #243650;
-    border: 1px solid #405778;
-    border-radius: 10px;
-    padding: 12px;
+    text-align:center;
+    background:#243650;
+    border:1px solid #405778;
+    border-radius:10px;
+    padding:12px;
 }
 
-.back-row {
-    margin-bottom: 20px;
-}
+.back-row { margin-bottom:20px; }
 
 #maze {
-    display: grid;
-    grid-template-columns: repeat(9, minmax(0, 1fr));
-    gap: 3px;
-    width: min(100%, 450px);
-    margin: 20px auto;
+    display:grid;
+    grid-template-columns:repeat(9,minmax(0,1fr));
+    gap:3px;
+    width:min(100%,450px);
+    margin:20px auto;
 }
 
 .cell {
-    aspect-ratio: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-    font-size: clamp(11px, 2.7vw, 22px);
-    background: #192b40;
+    aspect-ratio:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:4px;
+    font-size:clamp(11px,2.7vw,22px);
+    background:#192b40;
+    overflow:hidden;
 }
 
-.wall { background: #344765; }
-.door { background: #594318; }
-.player { background: #116e6f; }
-.enemy { background: #54284d; }
-.exit { background: #145b48; }
+.wall { background:#344765; }
+.door { background:#594318; }
+.player { background:#116e6f; }
+.enemy { background:#54284d; }
+.exit { background:#145b48; }
+
+.door.correct {
+    background:#176847;
+    outline:2px solid var(--green);
+}
+
+.door.wrong {
+    background:#792d3a;
+    outline:2px solid var(--red);
+}
 
 .game-info {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 10px;
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
 }
 
 .controls {
-    display: grid;
-    grid-template-columns: repeat(3, 58px);
-    justify-content: center;
-    gap: 7px;
+    display:grid;
+    grid-template-columns:repeat(3,58px);
+    justify-content:center;
+    gap:7px;
 }
 
 .controls button {
-    font-size: 20px;
-    background: var(--panel2);
-    color: white;
+    font-size:20px;
+    background:var(--panel2);
+    color:white;
 }
 
-.controls .empty { visibility: hidden; }
+.controls .empty { visibility:hidden; }
 
 #quiz {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 10;
-    background: #000b;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:10;
+    background:#000b;
+    align-items:center;
+    justify-content:center;
+    padding:16px;
 }
 
 .quiz-card {
-    width: min(100%, 480px);
-    background: var(--panel);
-    border: 1px solid #58708f;
-    border-radius: 16px;
-    padding: 24px;
+    width:min(100%,480px);
+    background:var(--panel);
+    border:1px solid #58708f;
+    border-radius:16px;
+    padding:24px;
 }
 
 #answers {
-    display: grid;
-    gap: 10px;
-    margin-top: 15px;
+    display:grid;
+    gap:10px;
+    margin-top:15px;
 }
 
 .answer {
-    background: var(--panel2);
-    color: white;
-    text-align: left;
+    background:var(--panel2);
+    color:white;
+    text-align:left;
+}
+
+.answer.correct-answer {
+    background:#176847;
+    outline:2px solid var(--green);
+}
+
+.answer.wrong-answer {
+    background:#792d3a;
+    outline:2px solid var(--red);
+}
+
+#quizFeedback {
+    font-weight:bold;
+    margin-top:15px;
+}
+
+/* KONTROL AR */
+
+.ar-controls {
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin:20px 0;
+}
+
+.ar-controls select {
+    flex:1;
+    min-width:180px;
+    padding:11px;
+    border-radius:9px;
+    border:1px solid #58708f;
+    background:var(--panel2);
+    color:white;
+    font-size:15px;
+}
+
+#arStatus {
+    margin-top:10px;
+    color:var(--yellow);
+    overflow-wrap:anywhere;
+}
+
+/* LAYAR KAMERA AR */
+
+#arViewer {
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:1000;
+    background:#000;
+}
+
+#arViewer.active { display:block; }
+
+#arSceneContainer {
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+}
+
+#arSceneContainer a-scene {
+    position:absolute !important;
+    inset:0 !important;
+    width:100% !important;
+    height:100% !important;
+}
+
+#arSceneContainer canvas {
+    width:100% !important;
+    height:100% !important;
+}
+
+#closeAR {
+    position:absolute;
+    top:15px;
+    right:15px;
+    z-index:1005;
+    background:#ff707b;
+    color:#26080b;
+    padding:13px 18px;
+}
+
+#arHint {
+    position:absolute;
+    left:12px;
+    right:12px;
+    bottom:20px;
+    z-index:1004;
+    text-align:center;
+    padding:12px;
+    border-radius:10px;
+    background:#101827dd;
+    color:white;
+    line-height:1.5;
+    pointer-events:none;
 }
 
 footer {
-    text-align: center;
-    padding: 25px;
-    border-top: 1px solid #344765;
-    color: var(--muted);
-    font-size: 13px;
+    text-align:center;
+    padding:25px;
+    border-top:1px solid #344765;
+    color:var(--muted);
+    font-size:13px;
 }
 
-@media (max-width: 650px) {
-    header { padding: 16px 4%; }
-    main { width: 92%; margin: 20px auto; }
-    .cards, .component-grid, .flow-branches {
-        grid-template-columns: 1fr;
+@media(max-width:650px) {
+    header { padding:16px 4%; }
+    main { width:92%; margin:20px auto; }
+    .cards,.component-grid,.flow-branches {
+        grid-template-columns:1fr;
     }
-    .card p { min-height: 0; }
+    .card p { min-height:0; }
+    .content-panel { padding:18px; }
 }
 </style>
 </head>
@@ -320,333 +429,347 @@ footer {
 
 <main>
 
-    <!-- BERANDA -->
-    <section id="home" class="page active">
-        <div class="hero">
-            <div class="icon">⚡</div>
-            <h1>Electronic <span class="accent">Learning Media</span></h1>
+<!-- BERANDA -->
+<section id="home" class="page active">
+    <div class="hero">
+        <div class="icon">⚡</div>
+        <h1>Electronic <span class="accent">Learning Media</span></h1>
+        <p>
+            Media pembelajaran interaktif untuk mengenal komponen
+            elektronika dasar melalui materi, Augmented Reality,
+            dan permainan edukatif.
+        </p>
+        <button class="primary" onclick="showPage('materiPage')">
+            Mulai Belajar →
+        </button>
+    </div>
+
+    <h2>Menu Pembelajaran</h2>
+
+    <div class="cards">
+        <article class="card">
+            <div class="card-icon">🎮</div>
+            <span class="tag">BELAJAR SAMBIL BERMAIN</span>
+            <h2>Electronic Maze</h2>
             <p>
-                Media pembelajaran interaktif untuk mengenal
-                komponen elektronika dasar melalui materi,
-                Augmented Reality, dan permainan edukatif.
+                Jelajahi labirin, jawab soal elektronika,
+                hindari musuh, kumpulkan poin, dan capai finish.
+            </p>
+            <button class="primary" onclick="showPage('gamePage')">
+                Buka Game
+            </button>
+        </article>
+
+        <article class="card">
+            <div class="card-icon">📱</div>
+            <span class="tag">VISUALISASI INTERAKTIF</span>
+            <h2>Augmented Reality</h2>
+            <p>
+                Kenali bentuk komponen elektronika dalam visualisasi 3D.
+            </p>
+            <button class="primary" onclick="showPage('arPage')">
+                Buka AR
+            </button>
+        </article>
+
+        <article class="card">
+            <div class="card-icon">📚</div>
+            <span class="tag">MATERI ELEKTRONIKA</span>
+            <h2>Materi Pembelajaran</h2>
+            <p>
+                Pelajari pengertian, fungsi, simbol, dan penerapan
+                komponen elektronika.
             </p>
             <button class="primary" onclick="showPage('materiPage')">
-                Mulai Belajar →
+                Baca Materi
+            </button>
+        </article>
+
+        <article class="card">
+            <div class="card-icon">🔀</div>
+            <span class="tag">ALUR PEMBELAJARAN</span>
+            <h2>Flowchart Drill and Practice</h2>
+            <p>
+                Lihat proses pembelajaran dari penyajian materi
+                sampai evaluasi.
+            </p>
+            <button class="primary" onclick="showPage('flowPage')">
+                Lihat Flowchart
+            </button>
+        </article>
+    </div>
+</section>
+
+<!-- GAME -->
+<section id="gamePage" class="page">
+    <div class="back-row">
+        <button class="secondary" onclick="showPage('home')">
+            ← Kembali ke Beranda
+        </button>
+    </div>
+
+    <div class="content-panel">
+        <h1>🎮 Electronic Maze</h1>
+        <p>
+            Jelajahi labirin, jawab soal pada setiap pintu,
+            hindari musuh, dan capai garis finish.
+            Setiap soal hanya bisa dijawab satu kali.
+        </p>
+
+        <div class="game-info">
+            <strong>Skor: <span id="score">0</span></strong>
+            <strong id="progress">Soal: 0/4</strong>
+            <strong>Nyawa: <span id="lives">❤️❤️❤️</span></strong>
+        </div>
+
+        <p id="gameStatus" role="status">
+            Tekan tombol mulai untuk bermain.
+        </p>
+
+        <div id="maze"></div>
+
+        <div class="controls">
+            <button class="empty"> </button>
+            <button onclick="movePlayer(-1,0)">▲</button>
+            <button class="empty"> </button>
+            <button onclick="movePlayer(0,-1)">◀</button>
+            <button onclick="movePlayer(1,0)">▼</button>
+            <button onclick="movePlayer(0,1)">▶</button>
+        </div>
+
+        <div style="text-align:center;margin-top:20px">
+            <button class="primary" onclick="startGame()">
+                Mulai / Ulangi Game
             </button>
         </div>
 
-        <h2>Menu Pembelajaran</h2>
-
-        <div class="cards">
-            <article class="card">
-                <div class="card-icon">🎮</div>
-                <span class="tag">BELAJAR SAMBIL BERMAIN</span>
-                <h2>Electronic Maze</h2>
-                <p>
-                    Jelajahi labirin, jawab soal elektronika,
-                    kumpulkan poin, dan capai garis finish.
-                </p>
-                <button class="primary" onclick="showPage('gamePage')">
-                    Buka Game
-                </button>
-            </article>
-
-            <article class="card">
-                <div class="card-icon">📱</div>
-                <span class="tag">VISUALISASI INTERAKTIF</span>
-                <h2>Augmented Reality</h2>
-                <p>
-                    Menu pengenalan komponen elektronika
-                    menggunakan media AR.
-                </p>
-                <button class="primary" onclick="showPage('arPage')">
-                    Buka AR
-                </button>
-            </article>
-
-            <article class="card">
-                <div class="card-icon">📚</div>
-                <span class="tag">MATERI ELEKTRONIKA</span>
-                <h2>Materi Pembelajaran</h2>
-                <p>
-                    Pelajari pengertian, fungsi, simbol,
-                    dan penerapan komponen elektronika.
-                </p>
-                <button class="primary" onclick="showPage('materiPage')">
-                    Baca Materi
-                </button>
-            </article>
-
-            <article class="card">
-                <div class="card-icon">🔀</div>
-                <span class="tag">ALUR PEMBELAJARAN</span>
-                <h2>Flowchart Drill and Practice</h2>
-                <p>
-                    Lihat proses pembelajaran berbasis komputer,
-                    dari penyajian materi sampai evaluasi.
-                </p>
-                <button class="primary" onclick="showPage('flowPage')">
-                    Lihat Flowchart
-                </button>
-            </article>
+        <div id="finalResult" class="component"
+             style="display:none;margin-top:20px">
+            <h2>🏆 Hasil Permainan</h2>
+            <p id="finalScore"></p>
+            <p id="finalCorrect"></p>
+            <p id="finalWrong"></p>
+            <p id="finalGrade"></p>
         </div>
-    </section>
+    </div>
+</section>
 
+<!-- AUGMENTED REALITY -->
+<section id="arPage" class="page">
+    <button class="secondary" onclick="showPage('home')">
+        ← Kembali ke Beranda
+    </button>
 
-    <!-- GAME -->
-    <section id="gamePage" class="page">
-        <div class="back-row">
-            <button class="secondary" onclick="showPage('home')">
-                ← Kembali ke Beranda
+    <div class="content-panel">
+        <h1>📱 Augmented Reality 3D</h1>
+
+        <p>
+            Amati model 3D komponen elektronika melalui kamera.
+            Pilih komponen, lalu arahkan kamera ke marker Hiro.
+        </p>
+
+        <div class="ar-controls">
+            <select id="arComponent" aria-label="Pilih komponen AR">
+                <option value="resistor">Resistor 3D</option>
+                <option value="capacitor">Kapasitor 3D</option>
+                <option value="inductor">Induktor 3D</option>
+                <option value="diode">Dioda 3D</option>
+            </select>
+
+            <button id="startARButton" class="primary" onclick="startAR()">
+                📷 Mulai Kamera AR
             </button>
         </div>
 
-        <div class="content-panel">
-            <h1>🎮 Electronic Maze</h1>
-            <p>
-                Jawab pertanyaan pada pintu labirin untuk mendapatkan
-                poin. Selesaikan semua pertanyaan sebelum menuju finish.
-            </p>
+        <p id="arStatus" role="status">
+            Pilih komponen dan tekan Mulai Kamera AR.
+        </p>
 
-            <div class="game-info">
-                <strong>Skor: <span id="score">0</span></strong>
-                <strong id="progress">Soal: 0/4</strong>
+        <div class="component-grid">
+            <div class="component">
+                <h3>🔴 Resistor</h3>
+                <p>Membatasi arus listrik.</p>
             </div>
-
-            <p id="gameStatus" role="status">
-                Tekan tombol mulai untuk bermain.
-            </p>
-
-            <div id="maze"></div>
-
-            <div class="controls">
-                <button class="empty"> </button>
-                <button onclick="movePlayer(-1,0)">▲</button>
-                <button class="empty"> </button>
-                <button onclick="movePlayer(0,-1)">◀</button>
-                <button onclick="movePlayer(1,0)">▼</button>
-                <button onclick="movePlayer(0,1)">▶</button>
+            <div class="component">
+                <h3>🔵 Kapasitor</h3>
+                <p>Menyimpan muatan listrik.</p>
             </div>
-
-            <div style="text-align:center;margin-top:20px">
-                <button class="primary" onclick="startGame()">Mulai / Ulangi Game</button>
+            <div class="component">
+                <h3>🟣 Induktor</h3>
+                <p>Menyimpan energi dalam medan magnet.</p>
+            </div>
+            <div class="component">
+                <h3>🟢 Dioda</h3>
+                <p>Mengalirkan arus terutama ke satu arah.</p>
             </div>
         </div>
-    </section>
 
+        <h2 style="margin-top:28px">Cara Menggunakan AR</h2>
+        <ol>
+            <li>Pilih komponen yang ingin dipelajari.</li>
+            <li>Tekan tombol Mulai Kamera AR.</li>
+            <li>Izinkan akses kamera ketika diminta.</li>
+            <li>Arahkan kamera ke marker Hiro.</li>
+            <li>Amati model 3D di atas marker.</li>
+            <li>Tekan Tutup AR jika sudah selesai.</li>
+        </ol>
 
-    <!-- AR -->
-    <section id="arPage" class="page">
-        <button class="secondary" onclick="showPage('home')">
-            ← Kembali ke Beranda
-        </button>
+        <p>
+            <strong>Catatan:</strong> model dibuat dari bentuk geometri
+            3D dan merupakan visualisasi sederhana, bukan hasil pemindaian
+            komponen asli.
+        </p>
+    </div>
+</section>
 
-        <div class="content-panel">
-            <h1>📱 Augmented Reality</h1>
-            <p>
-                Menu ini dirancang untuk membantu mahasiswa mengenali
-                bentuk fisik komponen elektronika secara visual.
-            </p>
+<!-- MATERI -->
+<section id="materiPage" class="page">
+    <button class="secondary" onclick="showPage('home')">
+        ← Kembali ke Beranda
+    </button>
 
-            <div class="component-grid">
-                <div class="component">
-                    <h3>🔴 Resistor</h3>
-                    <p>Komponen untuk membatasi arus listrik.</p>
-                </div>
-                <div class="component">
-                    <h3>🔵 Kapasitor</h3>
-                    <p>Komponen yang menyimpan muatan listrik.</p>
-                </div>
-                <div class="component">
-                    <h3>🟣 Induktor</h3>
-                    <p>Komponen yang menyimpan energi dalam medan magnet.</p>
-                </div>
-                <div class="component">
-                    <h3>🟢 Dioda</h3>
-                    <p>Komponen semikonduktor yang mengalirkan arus terutama ke satu arah.</p>
-                </div>
-            </div>
+    <div class="content-panel">
+        <h1>📚 Materi Komponen Elektronika</h1>
+        <p>
+            Pelajari komponen berikut sebelum mengerjakan
+            latihan dalam game Electronic Maze.
+        </p>
 
-            <h2 style="margin-top:28px">Cara Menggunakan AR</h2>
-            <ol>
-                <li>Buka aplikasi AR yang digunakan dalam proyek.</li>
-                <li>Arahkan kamera ke marker atau gambar pemicu.</li>
-                <li>Amati model komponen yang muncul.</li>
-                <li>Pelajari nama, bentuk, dan fungsi komponennya.</li>
-            </ol>
+        <div class="component-grid">
+            <article class="component">
+                <h3>1. Resistor</h3>
+                <p>
+                    Resistor adalah komponen pasif untuk membatasi
+                    arus listrik dan membagi tegangan.
+                </p>
+                <p><strong>Satuan:</strong> Ohm (Ω)</p>
+                <p><strong>Contoh:</strong> pembatas arus LED.</p>
+            </article>
 
-            <p>
-                <strong>Catatan:</strong> bagian ini masih berupa halaman
-                pengenalan AR. Untuk menampilkan model 3D melalui kamera,
-                diperlukan marker, aset 3D, dan integrasi aplikasi AR.
-            </p>
+            <article class="component">
+                <h3>2. Kapasitor</h3>
+                <p>
+                    Kapasitor menyimpan muatan dan energi listrik
+                    dalam medan listrik.
+                </p>
+                <p><strong>Satuan:</strong> Farad (F)</p>
+                <p><strong>Contoh:</strong> penyaring tegangan.</p>
+            </article>
+
+            <article class="component">
+                <h3>3. Induktor</h3>
+                <p>
+                    Induktor menyimpan energi dalam medan magnet
+                    ketika dialiri arus listrik.
+                </p>
+                <p><strong>Satuan:</strong> Henry (H)</p>
+                <p><strong>Contoh:</strong> rangkaian filter.</p>
+            </article>
+
+            <article class="component">
+                <h3>4. Dioda</h3>
+                <p>
+                    Dioda merupakan komponen semikonduktor yang
+                    memungkinkan arus mengalir terutama ke satu arah.
+                </p>
+                <p><strong>Terminal:</strong> Anoda dan katoda.</p>
+                <p><strong>Contoh:</strong> rangkaian penyearah.</p>
+            </article>
         </div>
-    </section>
 
-
-    <!-- MATERI -->
-    <section id="materiPage" class="page">
-        <button class="secondary" onclick="showPage('home')">
-            ← Kembali ke Beranda
-        </button>
-
-        <div class="content-panel">
-            <h1>📚 Materi Komponen Elektronika</h1>
-            <p>
-                Pelajari komponen berikut sebelum mengerjakan
-                latihan dalam game Electronic Maze.
-            </p>
-
-            <div class="component-grid">
-                <article class="component">
-                    <h3>1. Resistor</h3>
-                    <p>
-                        Resistor adalah komponen pasif yang digunakan
-                        untuk membatasi arus listrik dan membagi tegangan.
-                    </p>
-                    <p><strong>Satuan:</strong> Ohm (Ω)</p>
-                    <p><strong>Contoh penggunaan:</strong> pembatas arus LED.</p>
-                </article>
-
-                <article class="component">
-                    <h3>2. Kapasitor</h3>
-                    <p>
-                        Kapasitor menyimpan muatan dan energi listrik
-                        dalam medan listrik.
-                    </p>
-                    <p><strong>Satuan:</strong> Farad (F)</p>
-                    <p><strong>Contoh penggunaan:</strong> penyaring tegangan.</p>
-                </article>
-
-                <article class="component">
-                    <h3>3. Induktor</h3>
-                    <p>
-                        Induktor menyimpan energi dalam medan magnet
-                        ketika dialiri arus listrik.
-                    </p>
-                    <p><strong>Satuan:</strong> Henry (H)</p>
-                    <p><strong>Contoh penggunaan:</strong> rangkaian filter.</p>
-                </article>
-
-                <article class="component">
-                    <h3>4. Dioda</h3>
-                    <p>
-                        Dioda adalah komponen semikonduktor yang
-                        memungkinkan arus mengalir terutama ke satu arah.
-                    </p>
-                    <p><strong>Terminal:</strong> Anoda dan katoda.</p>
-                    <p><strong>Contoh penggunaan:</strong> penyearah.</p>
-                </article>
-            </div>
-
-            <div style="text-align:center;margin-top:24px">
-                <button class="primary" onclick="showPage('gamePage')">
-                    Latihan melalui Game →
-                </button>
-            </div>
+        <div style="text-align:center;margin-top:24px">
+            <button class="primary" onclick="showPage('gamePage')">
+                Latihan melalui Game →
+            </button>
         </div>
-    </section>
+    </div>
+</section>
 
+<!-- FLOWCHART -->
+<section id="flowPage" class="page">
+    <button class="secondary" onclick="showPage('home')">
+        ← Kembali ke Beranda
+    </button>
 
-    <!-- FLOWCHART -->
-    <section id="flowPage" class="page">
-        <button class="secondary" onclick="showPage('home')">
-            ← Kembali ke Beranda
-        </button>
+    <div class="content-panel">
+        <h1>🔀 Flowchart Drill and Practice</h1>
+        <p>
+            Model Drill and Practice menekankan latihan berulang
+            agar peserta didik memahami materi melalui jawaban,
+            pemeriksaan, dan umpan balik.
+        </p>
 
-        <div class="content-panel">
-            <h1>🔀 Flowchart Drill and Practice</h1>
-            <p>
-                Model Drill and Practice menekankan latihan berulang
-                agar peserta didik semakin memahami materi melalui
-                jawaban, pemeriksaan, dan umpan balik.
-            </p>
+        <div class="flow">
+            <div class="flow-box start">MULAI</div>
+            <div class="arrow">↓</div>
+            <div class="flow-box">Tampilkan tujuan pembelajaran</div>
+            <div class="arrow">↓</div>
+            <div class="flow-box">Sajikan materi komponen elektronika</div>
+            <div class="arrow">↓</div>
+            <div class="flow-box">Berikan latihan atau pertanyaan</div>
+            <div class="arrow">↓</div>
+            <div class="flow-box decision">Apakah jawaban benar?</div>
 
-            <div class="flow">
-                <div class="flow-box start">
-                    MULAI
+            <div class="flow-branches">
+                <div class="branch">
+                    <strong style="color:var(--green)">YA</strong>
+                    <div class="arrow">↓</div>
+                    Berikan penguatan dan skor
                 </div>
-
-                <div class="arrow">↓</div>
-
-                <div class="flow-box">
-                    Tampilkan tujuan pembelajaran
-                </div>
-
-                <div class="arrow">↓</div>
-
-                <div class="flow-box">
-                    Sajikan materi komponen elektronika
-                </div>
-
-                <div class="arrow">↓</div>
-
-                <div class="flow-box">
-                    Berikan latihan atau pertanyaan
-                </div>
-
-                <div class="arrow">↓</div>
-
-                <div class="flow-box decision">
-                    Apakah jawaban benar?
-                </div>
-
-                <div class="flow-branches">
-                    <div class="branch">
-                        <strong style="color:var(--green)">YA</strong>
-                        <div class="arrow">↓</div>
-                        Berikan penguatan dan skor
-                    </div>
-                    <div class="branch">
-                        <strong style="color:var(--red)">TIDAK</strong>
-                        <div class="arrow">↓</div>
-                        Tampilkan umpan balik dan kesempatan mencoba lagi
-                    </div>
-                </div>
-
-                <div class="arrow">↓</div>
-
-                <div class="flow-box decision">
-                    Apakah latihan sudah selesai?
-                </div>
-
-                <div class="flow-branches">
-                    <div class="branch">
-                        <strong style="color:var(--red)">BELUM</strong>
-                        <div class="arrow">↺</div>
-                        Lanjutkan latihan berikutnya
-                    </div>
-                    <div class="branch">
-                        <strong style="color:var(--green)">SUDAH</strong>
-                        <div class="arrow">↓</div>
-                        Tampilkan hasil evaluasi
-                    </div>
-                </div>
-
-                <div class="arrow">↓</div>
-
-                <div class="flow-box start">
-                    SELESAI
+                <div class="branch">
+                    <strong style="color:var(--red)">TIDAK</strong>
+                    <div class="arrow">↓</div>
+                    Berikan umpan balik
                 </div>
             </div>
 
-            <p>
-                <strong>Inti model:</strong> peserta didik berlatih,
-                menerima umpan balik, memperbaiki kesalahan, dan
-                mengulang latihan sampai mencapai tujuan pembelajaran.
-            </p>
+            <div class="arrow">↓</div>
+            <div class="flow-box decision">Apakah latihan sudah selesai?</div>
+
+            <div class="flow-branches">
+                <div class="branch">
+                    <strong style="color:var(--red)">BELUM</strong>
+                    <div class="arrow">↺</div>
+                    Lanjutkan latihan berikutnya
+                </div>
+                <div class="branch">
+                    <strong style="color:var(--green)">SUDAH</strong>
+                    <div class="arrow">↓</div>
+                    Tampilkan hasil evaluasi
+                </div>
+            </div>
+
+            <div class="arrow">↓</div>
+            <div class="flow-box start">SELESAI</div>
         </div>
-    </section>
+
+        <p>
+            <strong>Inti model:</strong> peserta didik berlatih,
+            menerima umpan balik, dan melihat hasil evaluasi.
+        </p>
+    </div>
+</section>
 
 </main>
 
-<!-- MODAL SOAL GAME -->
-<div id="quiz" role="dialog" aria-modal="true">
+<!-- MODAL SOAL -->
+<div id="quiz" role="dialog" aria-modal="true"
+     aria-labelledby="questionTitle">
     <div class="quiz-card">
         <h2 id="questionTitle">Pertanyaan</h2>
         <p id="questionText"></p>
         <div id="answers"></div>
+        <p id="quizFeedback" role="status"></p>
     </div>
+</div>
+
+<!-- LAYAR KAMERA AR -->
+<div id="arViewer">
+    <button id="closeAR" onclick="stopAR()">✕ Tutup AR</button>
+    <div id="arHint">
+        Arahkan kamera ke marker Hiro untuk melihat komponen 3D.
+    </div>
+    <div id="arSceneContainer"></div>
 </div>
 
 <footer>
@@ -655,7 +778,7 @@ footer {
 
 <script>
 // =====================================
-// NAVIGASI ANTAR MENU
+// NAVIGASI
 // =====================================
 
 function showPage(pageId) {
@@ -663,11 +786,19 @@ function showPage(pageId) {
         page.classList.remove("active");
     });
 
-    document.getElementById(pageId).classList.add("active");
+    const selectedPage = document.getElementById(pageId);
+    if (!selectedPage) return;
+
+    selectedPage.classList.add("active");
+
+    // Tutup kamera jika berpindah dari halaman AR.
+    if (pageId !== "arPage") {
+        stopAR();
+    }
 }
 
 // =====================================
-// DATA GAME ELECTRONIC MAZE
+// PETA DAN SOAL GAME
 // =====================================
 
 const mapTemplate = [
@@ -684,36 +815,40 @@ const mapTemplate = [
 
 const questions = [
     {
-        door: "R",
-        title: "Resistor",
-        text: "Apa fungsi utama resistor?",
-        options: [
+        door:"R",
+        title:"Resistor",
+        text:"Apa fungsi utama resistor?",
+        options:[
             "Membatasi arus listrik",
             "Menyimpan muatan listrik",
             "Mengukur suhu"
         ],
-        answer: 0
+        answer:0
     },
     {
-        door: "C",
-        title: "Kapasitor",
-        text: "Apa satuan kapasitansi?",
-        options: ["Ohm", "Farad", "Henry"],
-        answer: 1
+        door:"C",
+        title:"Kapasitor",
+        text:"Apa satuan kapasitansi?",
+        options:["Ohm","Farad","Henry"],
+        answer:1
     },
     {
-        door: "L",
-        title: "Induktor",
-        text: "Induktor menyimpan energi dalam bentuk apa?",
-        options: ["Cahaya", "Medan magnet", "Suara"],
-        answer: 1
+        door:"L",
+        title:"Induktor",
+        text:"Induktor menyimpan energi dalam bentuk apa?",
+        options:["Cahaya","Medan magnet","Suara"],
+        answer:1
     },
     {
-        door: "D",
-        title: "Dioda",
-        text: "Dioda mengalirkan arus terutama ke arah ...",
-        options: ["Dua arah sama bebas", "Satu arah", "Tidak ada arah"],
-        answer: 1
+        door:"D",
+        title:"Dioda",
+        text:"Dioda mengalirkan arus terutama ke arah ...",
+        options:[
+            "Dua arah sama bebas",
+            "Satu arah",
+            "Tidak ada arah"
+        ],
+        answer:1
     }
 ];
 
@@ -721,38 +856,90 @@ const maze = document.getElementById("maze");
 const gameStatus = document.getElementById("gameStatus");
 const quiz = document.getElementById("quiz");
 const answersElement = document.getElementById("answers");
+const quizFeedback = document.getElementById("quizFeedback");
+const finalResult = document.getElementById("finalResult");
 
 let map = [];
-let player = { row: 1, col: 1 };
+let player = {row:1,col:1};
+let enemy = {row:7,col:1};
+
 let score = 0;
+let lives = 3;
+
 let answered = new Set();
+let correctAnswered = new Set();
+let wrongAnswered = new Set();
+
 let activeQuestion = null;
 let gameRunning = false;
+let enemyTimer = null;
+let collisionProtection = false;
+let collisionTimer = null;
+let answerTimer = null;
+
+// =====================================
+// MULAI / ULANGI GAME
+// =====================================
 
 function startGame() {
+    stopEnemy();
+
+    if (collisionTimer !== null) {
+        clearTimeout(collisionTimer);
+        collisionTimer = null;
+    }
+
+    if (answerTimer !== null) {
+        clearTimeout(answerTimer);
+        answerTimer = null;
+    }
+
     map = mapTemplate.map(row => row.split(""));
-    player = { row: 1, col: 1 };
+    player = {row:1,col:1};
+    enemy = {row:7,col:1};
+
     score = 0;
+    lives = 3;
+
     answered = new Set();
+    correctAnswered = new Set();
+    wrongAnswered = new Set();
+
     activeQuestion = null;
     gameRunning = true;
+    collisionProtection = false;
 
     quiz.style.display = "none";
+    finalResult.style.display = "none";
 
     document.getElementById("score").textContent = score;
-    gameStatus.textContent = "Selesaikan semua soal dan capai finish!";
-
+    updateLives();
     updateProgress();
+
+    gameStatus.textContent =
+        "Hindari musuh, jawab semua soal, lalu capai finish!";
+
     renderMaze();
+    startEnemy();
 }
+
+function updateLives() {
+    document.getElementById("lives").textContent =
+        "❤️".repeat(lives) + "🖤".repeat(3-lives);
+}
+
+// =====================================
+// TAMPILKAN LABIRIN
+// =====================================
 
 function renderMaze() {
     maze.innerHTML = "";
 
-    for (let r = 0; r < map.length; r++) {
-        for (let c = 0; c < map[r].length; c++) {
+    for (let r=0; r<map.length; r++) {
+        for (let c=0; c<map[r].length; c++) {
             const tile = map[r][c];
             const cell = document.createElement("div");
+
             cell.className = "cell";
 
             if (tile === "#") {
@@ -763,7 +950,21 @@ function renderMaze() {
                 cell.textContent = "🏁";
             } else if (questions.some(q => q.door === tile)) {
                 cell.classList.add("door");
-                cell.textContent = answered.has(tile) ? "✅" : "❓";
+
+                if (correctAnswered.has(tile)) {
+                    cell.classList.add("correct");
+                    cell.textContent = "✅";
+                } else if (wrongAnswered.has(tile)) {
+                    cell.classList.add("wrong");
+                    cell.textContent = "❌";
+                } else {
+                    cell.textContent = "❓";
+                }
+            }
+
+            if (enemy.row === r && enemy.col === c) {
+                cell.textContent = "👾";
+                cell.classList.add("enemy");
             }
 
             if (player.row === r && player.col === c) {
@@ -776,13 +977,24 @@ function renderMaze() {
     }
 }
 
+// =====================================
+// SKOR DAN PROGRES
+// =====================================
+
 function updateProgress() {
     document.getElementById("score").textContent = score;
+
     document.getElementById("progress").textContent =
-        `Soal: ${answered.size}/${questions.length}`;
+        `Soal: ${answered.size}/${questions.length} | ` +
+        `Benar: ${correctAnswered.size} | ` +
+        `Salah: ${wrongAnswered.size}`;
 }
 
-function movePlayer(dr, dc) {
+// =====================================
+// GERAK PEMAIN
+// =====================================
+
+function movePlayer(dr,dc) {
     if (!gameRunning || activeQuestion !== null) return;
 
     const nr = player.row + dr;
@@ -796,12 +1008,18 @@ function movePlayer(dr, dc) {
         return;
     }
 
-    player = { row: nr, col: nc };
-    const tile = map[nr][nc];
+    player = {row:nr,col:nc};
+
+    if (checkCollision()) return;
 
     renderMaze();
 
-    if (questions.some(q => q.door === tile) && !answered.has(tile)) {
+    const tile = map[nr][nc];
+
+    if (
+        questions.some(q => q.door === tile) &&
+        !answered.has(tile)
+    ) {
         openQuestion(tile);
         return;
     }
@@ -809,38 +1027,168 @@ function movePlayer(dr, dc) {
     checkFinish();
 }
 
+// =====================================
+// MUSUH MENGEJAR PEMAIN
+// =====================================
+
+function startEnemy() {
+    stopEnemy();
+
+    enemyTimer = window.setInterval(() => {
+        if (!gameRunning || activeQuestion !== null) return;
+        moveEnemyTowardPlayer();
+    },700);
+}
+
+function stopEnemy() {
+    if (enemyTimer !== null) {
+        clearInterval(enemyTimer);
+        enemyTimer = null;
+    }
+}
+
+function moveEnemyTowardPlayer() {
+    if (!gameRunning) return;
+
+    const queue = [{
+        row:enemy.row,
+        col:enemy.col,
+        firstStep:null
+    }];
+
+    const visited = new Set();
+    visited.add(`${enemy.row},${enemy.col}`);
+
+    const directions = [
+        [-1,0],
+        [1,0],
+        [0,-1],
+        [0,1]
+    ];
+
+    let nextStep = null;
+
+    while (queue.length > 0) {
+        const current = queue.shift();
+
+        if (
+            current.row === player.row &&
+            current.col === player.col
+        ) {
+            nextStep = current.firstStep;
+            break;
+        }
+
+        for (const [dr,dc] of directions) {
+            const nr = current.row + dr;
+            const nc = current.col + dc;
+            const key = `${nr},${nc}`;
+
+            if (
+                nr < 0 || nr >= map.length ||
+                nc < 0 || nc >= map[nr].length ||
+                map[nr][nc] === "#" ||
+                visited.has(key)
+            ) {
+                continue;
+            }
+
+            visited.add(key);
+
+            queue.push({
+                row:nr,
+                col:nc,
+                firstStep:current.firstStep || {
+                    row:nr,
+                    col:nc
+                }
+            });
+        }
+    }
+
+    if (nextStep) {
+        enemy = {
+            row:nextStep.row,
+            col:nextStep.col
+        };
+    }
+
+    if (checkCollision()) return;
+
+    renderMaze();
+}
+
+function checkCollision() {
+    if (
+        enemy.row === player.row &&
+        enemy.col === player.col &&
+        !collisionProtection
+    ) {
+        loseLife();
+        return true;
+    }
+
+    return false;
+}
+
+function loseLife() {
+    if (!gameRunning || collisionProtection) return;
+
+    lives--;
+    updateLives();
+
+    collisionProtection = true;
+
+    if (lives <= 0) {
+        gameRunning = false;
+        stopEnemy();
+
+        gameStatus.textContent =
+            "💀 Game over! Kamu kehabisan nyawa.";
+
+        showFinalResult(false);
+        renderMaze();
+        return;
+    }
+
+    gameStatus.textContent =
+        `💥 Kamu tertangkap! Nyawa tersisa ${lives}. ` +
+        "Kamu dikembalikan ke posisi awal.";
+
+    player = {row:1,col:1};
+    renderMaze();
+
+    collisionTimer = window.setTimeout(() => {
+        collisionProtection = false;
+        collisionTimer = null;
+    },1500);
+}
+
+// =====================================
+// TAMPILKAN PERTANYAAN
+// =====================================
+
 function openQuestion(tile) {
     const index = questions.findIndex(q => q.door === tile);
-    if (index < 0) return;
+
+    if (index < 0 || answered.has(tile)) return;
 
     activeQuestion = index;
+
     const q = questions[index];
 
     document.getElementById("questionTitle").textContent = q.title;
     document.getElementById("questionText").textContent = q.text;
-    answersElement.innerHTML = "";
 
-    q.options.forEach((option, i) => {
+    answersElement.innerHTML = "";
+    quizFeedback.textContent = "";
+
+    q.options.forEach((option,i) => {
         const button = document.createElement("button");
+
         button.className = "answer";
         button.textContent = option;
-
-        button.onclick = () => {
-            if (i === q.answer) {
-                score += 10;
-                answered.add(q.door);
-                gameStatus.textContent = "Benar! +10 poin.";
-            } else {
-                gameStatus.textContent =
-                    "Belum tepat. Coba pelajari materi lagi.";
-            }
-
-            activeQuestion = null;
-            quiz.style.display = "none";
-            updateProgress();
-            renderMaze();
-            checkFinish();
-        };
+        button.onclick = () => checkAnswer(q,i,button);
 
         answersElement.appendChild(button);
     });
@@ -848,32 +1196,478 @@ function openQuestion(tile) {
     quiz.style.display = "flex";
 }
 
+// =====================================
+// PERIKSA JAWABAN
+// =====================================
+
+function checkAnswer(question,selectedIndex,selectedButton) {
+    if (
+        activeQuestion === null ||
+        answered.has(question.door)
+    ) {
+        return;
+    }
+
+    answered.add(question.door);
+
+    answersElement.querySelectorAll("button").forEach(button => {
+        button.disabled = true;
+    });
+
+    if (selectedIndex === question.answer) {
+        correctAnswered.add(question.door);
+        score += 10;
+
+        selectedButton.classList.add("correct-answer");
+        quizFeedback.style.color = "var(--green)";
+        quizFeedback.textContent =
+            "✅ Benar! Kamu mendapatkan 10 poin.";
+
+        gameStatus.textContent =
+            `Jawaban ${question.title} benar! +10 poin.`;
+    } else {
+        wrongAnswered.add(question.door);
+        selectedButton.classList.add("wrong-answer");
+
+        const buttons = answersElement.querySelectorAll("button");
+        buttons[question.answer].classList.add("correct-answer");
+
+        quizFeedback.style.color = "var(--red)";
+        quizFeedback.textContent =
+            `❌ Salah! Jawaban benar: ${question.options[question.answer]}.`;
+
+        gameStatus.textContent =
+            `Jawaban ${question.title} salah. Soal sudah terkunci.`;
+    }
+
+    updateProgress();
+    renderMaze();
+
+    answerTimer = window.setTimeout(() => {
+        activeQuestion = null;
+        quiz.style.display = "none";
+        answerTimer = null;
+
+        if (!gameRunning) return;
+
+        renderMaze();
+        checkFinish();
+    },1500);
+}
+
+// =====================================
+// FINISH DAN HASIL AKHIR
+// =====================================
+
 function checkFinish() {
+    if (!gameRunning) return;
+
     const tile = map[player.row][player.col];
 
     if (tile !== "E") return;
 
     if (answered.size === questions.length) {
         gameRunning = false;
+        stopEnemy();
+
         gameStatus.textContent =
-            `🏆 Selamat! Kamu menang dengan skor ${score}.`;
+            "🏆 Selamat! Kamu berhasil menyelesaikan permainan.";
+
+        showFinalResult(true);
     } else {
         gameStatus.textContent =
-            `Selesaikan semua ${questions.length} soal terlebih dahulu.`;
+            `Selesaikan semua ${questions.length} soal terlebih dahulu!`;
     }
 }
 
-document.addEventListener("keydown", event => {
+function showFinalResult(won) {
+    const benar = correctAnswered.size;
+    const salah = wrongAnswered.size;
+    const nilai = Math.round((benar/questions.length)*100);
+
+    document.getElementById("finalScore").textContent =
+        `Skor: ${score} dari ${questions.length*10} poin`;
+
+    document.getElementById("finalCorrect").textContent =
+        `Jawaban benar: ${benar}`;
+
+    document.getElementById("finalWrong").textContent =
+        `Jawaban salah: ${salah}`;
+
+    document.getElementById("finalGrade").textContent =
+        `Nilai akhir: ${nilai}/100` +
+        (won ? "" : " — Permainan belum berhasil diselesaikan.");
+
+    finalResult.style.display = "block";
+}
+
+// =====================================
+// KONTROL KEYBOARD
+// =====================================
+
+document.addEventListener("keydown",event => {
     if (!gameRunning || activeQuestion !== null) return;
 
     const key = event.key.toLowerCase();
 
-    if (key.startsWith("arrow")) event.preventDefault();
+    if (key.startsWith("arrow")) {
+        event.preventDefault();
+    }
 
-    if (key === "arrowup" || key === "w") movePlayer(-1, 0);
-    if (key === "arrowdown" || key === "s") movePlayer(1, 0);
-    if (key === "arrowleft" || key === "a") movePlayer(0, -1);
-    if (key === "arrowright" || key === "d") movePlayer(0, 1);
+    if (key === "arrowup" || key === "w") movePlayer(-1,0);
+    if (key === "arrowdown" || key === "s") movePlayer(1,0);
+    if (key === "arrowleft" || key === "a") movePlayer(0,-1);
+    if (key === "arrowright" || key === "d") movePlayer(0,1);
+});
+
+// Tampilkan labirin awal.
+map = mapTemplate.map(row => row.split(""));
+renderMaze();
+
+
+// =====================================
+// AUGMENTED REALITY 3D
+// =====================================
+
+const arViewer = document.getElementById("arViewer");
+const arContainer = document.getElementById("arSceneContainer");
+const arStatus = document.getElementById("arStatus");
+const arHint = document.getElementById("arHint");
+const arComponent = document.getElementById("arComponent");
+const startARButton = document.getElementById("startARButton");
+
+let arScene = null;
+let arStarting = false;
+let arReady = false;
+let arErrorTimer = null;
+
+// =====================================
+// MULAI AR
+// =====================================
+
+async function startAR() {
+    if (arStarting || arReady) return;
+
+    if (!window.isSecureContext) {
+        arStatus.textContent =
+            "AR memerlukan koneksi aman. Buka melalui localhost atau HTTPS.";
+        return;
+    }
+
+    if (!navigator.mediaDevices ||
+        !navigator.mediaDevices.getUserMedia) {
+        arStatus.textContent =
+            "Browser ini tidak mendukung akses kamera.";
+        return;
+    }
+
+    if (!window.AFRAME) {
+        arStatus.textContent =
+            "Library A-Frame belum berhasil dimuat. Periksa koneksi internet.";
+        return;
+    }
+
+    arStarting = true;
+    startARButton.disabled = true;
+    startARButton.textContent = "Menyiapkan kamera...";
+    arStatus.textContent =
+        "Izinkan akses kamera jika muncul permintaan dari browser.";
+
+    arViewer.classList.add("active");
+    arContainer.innerHTML = "";
+    arHint.textContent =
+        "Memulai kamera. Arahkan kamera ke marker Hiro setelah siap.";
+
+    try {
+        createARScene();
+        arReady = true;
+
+        arStatus.textContent =
+            "AR dimulai. Arahkan kamera ke marker Hiro.";
+    } catch (error) {
+        console.error("Gagal memulai AR:",error);
+
+        arStatus.textContent =
+            "Gagal memulai AR. Periksa izin kamera dan koneksi internet.";
+
+        stopAR();
+    } finally {
+        arStarting = false;
+        startARButton.disabled = false;
+        startARButton.textContent = "📷 Mulai Kamera AR";
+    }
+}
+
+// =====================================
+// MEMBUAT SCENE AR
+// =====================================
+
+function createARScene() {
+    const scene = document.createElement("a-scene");
+
+    scene.setAttribute("embedded","");
+    scene.setAttribute("vr-mode-ui","enabled: false");
+    scene.setAttribute("renderer","alpha: true; antialias: true; precision: mediump");
+    scene.setAttribute(
+        "arjs",
+        "sourceType: webcam; debugUIEnabled: false; trackingMethod: best"
+    );
+
+    scene.style.width = "100%";
+    scene.style.height = "100%";
+
+    const marker = document.createElement("a-marker");
+    marker.setAttribute("preset","hiro");
+    marker.setAttribute("emitevents","true");
+
+    // Model tidak diberi animasi rotasi.
+    const model = createComponentModel(arComponent.value);
+    marker.appendChild(model);
+
+    const camera = document.createElement("a-entity");
+    camera.setAttribute("camera","");
+
+    scene.appendChild(marker);
+    scene.appendChild(camera);
+
+    arContainer.appendChild(scene);
+
+    arScene = scene;
+
+    scene.addEventListener("loaded",() => {
+        arHint.textContent =
+            "Kamera aktif. Arahkan kamera ke marker Hiro untuk melihat model 3D.";
+    });
+
+    scene.addEventListener("camera-init",() => {
+        arHint.textContent =
+            "Kamera aktif. Arahkan kamera ke marker Hiro.";
+    });
+
+    scene.addEventListener("camera-error",() => {
+        arStatus.textContent =
+            "Kamera gagal dibuka. Izinkan akses kamera dan coba kembali.";
+        arHint.textContent =
+            "Kamera tidak dapat diakses. Tutup AR lalu coba lagi.";
+    });
+
+    marker.addEventListener("markerFound",() => {
+        arHint.textContent =
+            "Marker terdeteksi! Amati model komponen 3D.";
+    });
+
+    marker.addEventListener("markerLost",() => {
+        arHint.textContent =
+            "Marker tidak terlihat. Arahkan kamera kembali ke marker Hiro.";
+    });
+}
+
+// =====================================
+// MEMBUAT MODEL KOMPONEN 3D
+// =====================================
+
+function createComponentModel(type) {
+    const group = document.createElement("a-entity");
+
+    group.classList.add("component-model");
+    group.setAttribute("position","0 0.1 0");
+    group.setAttribute("rotation","0 0 0");
+    group.setAttribute("scale","1 1 1");
+
+    if (type === "resistor") {
+        // Kaki resistor
+        addCylinder(group,0.32,0.025,0.025,"#c7c7c7",
+            "-0.43 0 0","0 0 90");
+        addCylinder(group,0.32,0.025,0.025,"#c7c7c7",
+            "0.43 0 0","0 0 90");
+
+        // Badan resistor
+        addCylinder(group,0.48,0.13,0.13,"#c99b62",
+            "0 0 0","0 0 90");
+
+        // Gelang warna
+        addCylinder(group,0.035,0.137,0.137,"#d94841",
+            "-0.13 0 0","0 0 90");
+        addCylinder(group,0.035,0.137,0.137,"#3d2b1f",
+            "-0.04 0 0","0 0 90");
+        addCylinder(group,0.035,0.137,0.137,"#d8c34a",
+            "0.05 0 0","0 0 90");
+        addCylinder(group,0.035,0.137,0.137,"#d94841",
+            "0.14 0 0","0 0 90");
+
+        addLabel(group,"RESISTOR","#ffffff","0 0.3 0");
+    }
+
+    else if (type === "capacitor") {
+        // Kaki kapasitor
+        addCylinder(group,0.3,0.025,0.025,"#c7c7c7",
+            "-0.08 -0.15 0","0 0 0");
+        addCylinder(group,0.3,0.025,0.025,"#c7c7c7",
+            "0.08 -0.15 0","0 0 0");
+
+        // Badan kapasitor elektrolit
+        addCylinder(group,0.34,0.18,0.18,"#2879d0",
+            "0 0.06 0","0 0 0");
+
+        // Tutup atas
+        addCylinder(group,0.025,0.18,0.18,"#b9c6d8",
+            "0 0.235 0","0 0 0");
+
+        addLabel(group,"KAPASITOR","#ffffff","0 0.38 0");
+    }
+
+    else if (type === "inductor") {
+        // Inti induktor
+        addCylinder(group,0.36,0.12,0.12,"#8d98a8",
+            "0 0 0","0 0 0");
+
+        // Lilitan sederhana menggunakan torus
+        for (let i=0; i<6; i++) {
+            const coil = document.createElement("a-torus");
+            coil.setAttribute("radius","0.13");
+            coil.setAttribute("radius-tubular","0.018");
+            coil.setAttribute("segments-radial","8");
+            coil.setAttribute("segments-tubular","24");
+            coil.setAttribute("color","#e6a23c");
+            coil.setAttribute("rotation","90 0 0");
+            coil.setAttribute("position",`${-0.13+i*0.052} 0 0`);
+            group.appendChild(coil);
+        }
+
+        addCylinder(group,0.25,0.025,0.025,"#c7c7c7",
+            "-0.2 -0.15 0","0 0 0");
+        addCylinder(group,0.25,0.025,0.025,"#c7c7c7",
+            "0.2 -0.15 0","0 0 0");
+
+        addLabel(group,"INDUKTOR","#ffffff","0 0.27 0");
+    }
+
+    else if (type === "diode") {
+        // Kaki dioda
+        addCylinder(group,0.27,0.022,0.022,"#c7c7c7",
+            "-0.31 0 0","0 0 90");
+        addCylinder(group,0.27,0.022,0.022,"#c7c7c7",
+            "0.31 0 0","0 0 90");
+
+        // Badan dioda
+        addCylinder(group,0.36,0.09,0.09,"#d94841",
+            "0 0 0","0 0 90");
+
+        // Cincin penanda katoda
+        addCylinder(group,0.04,0.095,0.095,"#252525",
+            "0.12 0 0","0 0 90");
+
+        addLabel(group,"DIODA","#ffffff","0 0.25 0");
+    }
+
+    return group;
+}
+
+// Membuat silinder dengan parameter sederhana.
+function addCylinder(parent,height,radiusTop,radiusBottom,color,position,rotation) {
+    const cylinder = document.createElement("a-cylinder");
+
+    cylinder.setAttribute("height",String(height));
+    cylinder.setAttribute("radius",String(radiusTop));
+    cylinder.setAttribute("radius-top",String(radiusTop));
+    cylinder.setAttribute("radius-bottom",String(radiusBottom));
+    cylinder.setAttribute("color",color);
+    cylinder.setAttribute("position",position);
+    cylinder.setAttribute("rotation",rotation);
+
+    parent.appendChild(cylinder);
+    return cylinder;
+}
+
+// Menambahkan label nama komponen.
+function addLabel(parent,value,color,position) {
+    const label = document.createElement("a-text");
+
+    label.setAttribute("value",value);
+    label.setAttribute("color",color);
+    label.setAttribute("align","center");
+    label.setAttribute("width","2.5");
+    label.setAttribute("side","double");
+    label.setAttribute("position",position);
+
+    parent.appendChild(label);
+}
+
+// =====================================
+// GANTI MODEL SAAT PILIHAN BERUBAH
+// =====================================
+
+arComponent.addEventListener("change",() => {
+    const marker = arContainer.querySelector("a-marker");
+
+    if (!marker) {
+        arStatus.textContent =
+            `Komponen dipilih: ${arComponent.options[arComponent.selectedIndex].text}.`;
+        return;
+    }
+
+    const oldModel = marker.querySelector(".component-model");
+
+    if (oldModel) {
+        oldModel.remove();
+    }
+
+    const newModel = createComponentModel(arComponent.value);
+    marker.appendChild(newModel);
+
+    arHint.textContent =
+        `Model ${arComponent.options[arComponent.selectedIndex].text} dipilih. Arahkan kamera ke marker Hiro.`;
+});
+
+// =====================================
+// TUTUP AR DAN BERSIHKAN KAMERA
+// =====================================
+
+function stopAR() {
+    arReady = false;
+    arStarting = false;
+
+    if (arErrorTimer !== null) {
+        clearTimeout(arErrorTimer);
+        arErrorTimer = null;
+    }
+
+    if (arScene) {
+        // Menghapus scene AR.js akan menghentikan penggunaan kamera
+        // oleh scene tersebut dan melepaskan elemen video terkait.
+        arScene.pause();
+
+        if (arScene.parentNode) {
+            arScene.parentNode.removeChild(arScene);
+        }
+
+        arScene = null;
+    }
+
+    // Bersihkan video yang mungkin masih dibuat oleh AR.js.
+    arContainer.querySelectorAll("video").forEach(video => {
+        if (video.srcObject && video.srcObject.getTracks) {
+            video.srcObject.getTracks().forEach(track => track.stop());
+            video.srcObject = null;
+        }
+        video.remove();
+    });
+
+    arContainer.innerHTML = "";
+    arViewer.classList.remove("active");
+
+    startARButton.disabled = false;
+    startARButton.textContent = "📷 Mulai Kamera AR";
+
+    arStatus.textContent =
+        "AR ditutup. Pilih komponen untuk memulai kembali.";
+}
+
+// Tutup AR jika pengguna menekan Escape.
+document.addEventListener("keydown",event => {
+    if (event.key === "Escape" && arViewer.classList.contains("active")) {
+        stopAR();
+    }
 });
 </script>
 
